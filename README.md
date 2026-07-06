@@ -1,2 +1,38 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/creiddom/php-project-57/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/creiddom/php-project-57/actions)
+[![Linter and Tests](https://github.com/creiddom/php-project-57/actions/workflows/main.yml/badge.svg)](https://github.com/creiddom/php-project-57/actions/workflows/main.yml)
+
+### Задеплоенное приложение
+
+[Менеджер задач](https://php-project-57.onrender.com)
+
+### Требования
+
+- PHP >= 8.4
+- Composer
+- PostgreSQL
+- Node.js >= 18
+
+### Установка
+
+```bash
+git clone https://github.com/creiddom/php-project-57.git
+cd php-project-57
+make setup
+```
+
+### Запуск
+
+```bash
+php artisan migrate:refresh --seed --force
+make start
+```
+
+Откройте http://127.0.0.1:8000/
+
+### Линтер и тесты
+
+```bash
+make lint
+make test
+```

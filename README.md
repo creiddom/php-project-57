@@ -1,10 +1,11 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/creiddom/php-project-57/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/creiddom/php-project-57/actions)
 [![Linter and Tests](https://github.com/creiddom/php-project-57/actions/workflows/main.yml/badge.svg)](https://github.com/creiddom/php-project-57/actions/workflows/main.yml)
+[![SonarQube Cloud](https://sonarcloud.io/images/project_badges/sonarcloud-light.svg)](https://sonarcloud.io/summary/new_code?id=creiddom_php-project-57)
 
 ### Задеплоенное приложение
 
-[Менеджер задач](https://php-project-57.onrender.com)
+[Менеджер задач](https://php-project-57-q8e4.onrender.com)
 
 ### Требования
 

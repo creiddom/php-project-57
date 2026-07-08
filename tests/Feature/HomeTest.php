@@ -14,6 +14,7 @@ class HomeTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertSee('Привет от Хекслета!', false);
+        $response->assertSee(__('strings.hello from Hexlet'), false);
+        $response->assertSee(__('strings.push me'), false);
     }
 }

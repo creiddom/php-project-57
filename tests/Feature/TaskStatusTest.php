@@ -222,6 +222,7 @@ class TaskStatusTest extends TestCase
             ->delete(route('task_statuses.destroy', ['task_status' => $this->taskStatus]));
 
         $response->assertRedirect(route('task_statuses.index'));
+        $response->assertSessionHas('flash_notification');
         $this->assertDatabaseHas('task_statuses', ['id' => $this->taskStatus->id]);
     }
 }

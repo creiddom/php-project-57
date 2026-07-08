@@ -36,10 +36,13 @@ lint-fix: vendor/bin/phpcbf
 vendor/bin/phpcs vendor/bin/phpcbf vendor/bin/phpstan: composer.lock
 	composer install
 
-test:
+test-db-setup:
+	@bash scripts/setup-test-db.sh
+
+test: test-db-setup
 	php artisan test
 
-test-coverage:
+test-coverage: test-db-setup
 	XDEBUG_MODE=coverage composer exec --verbose phpunit tests -- --coverage-clover build/logs/clover.xml
 
 build:

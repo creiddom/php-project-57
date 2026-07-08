@@ -2,6 +2,9 @@
 
 return [
     'task manager' => 'Менеджер задач',
+    'hello from Hexlet' => 'Привет от Хекслета!',
+    'this is a simple task manager on Laravel' => 'Это простой менеджер задач на Laravel',
+    'push me' => 'Нажми меня',
     'log in' => 'Вход',
     'log out' => 'Выход',
     'registration' => 'Регистрация',
@@ -25,4 +28,14 @@ return [
     'edit' => 'Изменить',
     'are you sure' => 'Вы уверены?',
     'status exists' => 'Статус с таким именем уже существует',
+    'tasks' => 'Задачи',
+    'create task' => 'Создать задачу',
+    'edit task' => 'Изменение задачи',
+    'view task' => 'Просмотр задачи',
+    'description' => 'Описание',
+    'status' => 'Статус',
+    'executor' => 'Исполнитель',
+    'author' => 'Автор',
+    'task exists' => 'Задача с таким именем уже существует',
+    'select placeholder' => '----------',
 ];

@@ -17,6 +17,9 @@
                     {{ __('strings.task manager') }}
                 </a>
                 <nav class="flex flex-wrap items-center gap-4">
+                    <a href="{{ route('tasks.index') }}" class="header-nav-link">
+                        {{ __('strings.tasks') }}
+                    </a>
                     <a href="{{ route('task_statuses.index') }}" class="header-nav-link">
                         {{ __('strings.statuses') }}
                     </a>

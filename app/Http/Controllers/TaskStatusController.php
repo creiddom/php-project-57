@@ -12,12 +12,17 @@ class TaskStatusController extends Controller
 {
     public function __construct()
     {
-        $this->authorizeResource(TaskStatus::class, 'task_status');
+        $this->authorizeResource(TaskStatus::class, 'task_status', [
+            'except' => ['index'],
+        ]);
     }
 
     public function index(): View
     {
-        $taskStatuses = TaskStatus::query()->orderBy('name')->get();
+        $taskStatuses = TaskStatus::query()
+            ->withCount('tasks')
+            ->orderBy('name')
+            ->get();
 
         return view('TaskStatus.index', compact('taskStatuses'));
     }

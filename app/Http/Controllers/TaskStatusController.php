@@ -15,19 +15,13 @@ class TaskStatusController extends Controller
         $this->authorizeResource(TaskStatus::class, 'task_status');
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index(): View
     {
-        $taskStatuses = TaskStatus::all();
+        $taskStatuses = TaskStatus::query()->orderBy('name')->get();
 
         return view('TaskStatus.index', compact('taskStatuses'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(): View
     {
         $taskStatus = new TaskStatus();
@@ -35,29 +29,20 @@ class TaskStatusController extends Controller
         return view('TaskStatus.create', compact('taskStatus'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreTaskStatusRequest $request): RedirectResponse
     {
-        TaskStatus::create($request->validated());
+        TaskStatus::query()->create($request->validated());
 
         flash(__('messages.status.created'))->success();
 
         return redirect()->route('task_statuses.index');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(TaskStatus $taskStatus): View
     {
         return view('TaskStatus.edit', compact('taskStatus'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateTaskStatusRequest $request, TaskStatus $taskStatus): RedirectResponse
     {
         $taskStatus->update($request->validated());
@@ -67,17 +52,12 @@ class TaskStatusController extends Controller
         return redirect()->route('task_statuses.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(TaskStatus $taskStatus): RedirectResponse
     {
-        if ($taskStatus->tasks()->exists()) {
-            flash(__('messages.status.deleted.error'))->error();
-        } else {
-            $taskStatus->delete();
-
+        if ($taskStatus->deleteIfUnused()) {
             flash(__('messages.status.deleted'))->success();
+        } else {
+            flash(__('messages.status.deleted.error'))->error();
         }
 
         return redirect()->route('task_statuses.index');

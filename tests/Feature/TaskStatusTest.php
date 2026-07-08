@@ -35,11 +35,21 @@ class TaskStatusTest extends TestCase
 
         $this->artisan('db:seed');
 
-        $this->assertDatabaseHas('task_statuses', ['name' => 'новый']);
-        $this->assertDatabaseHas('task_statuses', ['name' => 'в работе']);
-        $this->assertDatabaseHas('task_statuses', ['name' => 'на тестировании']);
-        $this->assertDatabaseHas('task_statuses', ['name' => 'завершен']);
-        $this->assertDatabaseCount('task_statuses', 4);
+        foreach (TaskStatus::DEFAULT_NAMES as $name) {
+            $this->assertDatabaseHas('task_statuses', ['name' => $name]);
+        }
+
+        $this->assertDatabaseCount('task_statuses', count(TaskStatus::DEFAULT_NAMES));
+    }
+
+    public function testSeederIsIdempotent(): void
+    {
+        TaskStatus::query()->delete();
+
+        $this->artisan('db:seed');
+        $this->artisan('db:seed');
+
+        $this->assertDatabaseCount('task_statuses', count(TaskStatus::DEFAULT_NAMES));
     }
 
     public function testIndex(): void
@@ -61,7 +71,7 @@ class TaskStatusTest extends TestCase
     {
         $response = $this->get(route('task_statuses.create'));
 
-        $response->assertStatus(403);
+        $response->assertRedirect(route('login'));
     }
 
     public function testStore(): void
@@ -84,7 +94,7 @@ class TaskStatusTest extends TestCase
                 'name' => 'newTestStatus',
             ]);
 
-        $response->assertStatus(403);
+        $response->assertRedirect(route('login'));
     }
 
     public function testStoreValidation(): void
@@ -127,7 +137,7 @@ class TaskStatusTest extends TestCase
     {
         $response = $this->get(route('task_statuses.edit', ['task_status' => $this->taskStatus]));
 
-        $response->assertStatus(403);
+        $response->assertRedirect(route('login'));
     }
 
     public function testUpdate(): void
@@ -158,6 +168,19 @@ class TaskStatusTest extends TestCase
         $response->assertRedirect(route('task_statuses.edit', ['task_status' => $this->taskStatus]));
     }
 
+    public function testUpdateValidation(): void
+    {
+        $response = $this
+            ->actingAs($this->user)
+            ->from(route('task_statuses.edit', ['task_status' => $this->taskStatus]))
+            ->patch(route('task_statuses.update', ['task_status' => $this->taskStatus]), [
+                'name' => '',
+            ]);
+
+        $response->assertSessionHasErrors('name');
+        $response->assertRedirect(route('task_statuses.edit', ['task_status' => $this->taskStatus]));
+    }
+
     public function testUpdateNotAuth(): void
     {
         $response = $this
@@ -165,7 +188,7 @@ class TaskStatusTest extends TestCase
                 'name' => 'test',
             ]);
 
-        $response->assertStatus(403);
+        $response->assertRedirect(route('login'));
     }
 
     public function testDestroyNotAuth(): void
@@ -173,7 +196,7 @@ class TaskStatusTest extends TestCase
         $response = $this
             ->delete(route('task_statuses.destroy', ['task_status' => $this->taskStatus]));
 
-        $response->assertStatus(403);
+        $response->assertRedirect(route('login'));
     }
 
     public function testDestroy(): void

@@ -36,11 +36,11 @@
                                         data-method="delete"
                                         data-confirm="{{ __('strings.are you sure') }}"
                                         class="font-medium text-red-600 transition hover:text-red-800"
-                                        href="{{ route('task_statuses.destroy', $taskStatus->id) }}"
+                                        href="{{ route('task_statuses.destroy', $taskStatus) }}"
                                     >{{ __('strings.delete') }}</a>
                                     <a
                                         class="font-medium text-blue-600 transition hover:text-blue-800"
-                                        href="{{ route('task_statuses.edit', $taskStatus->id) }}"
+                                        href="{{ route('task_statuses.edit', $taskStatus) }}"
                                     >{{ __('strings.edit') }}</a>
                                 </td>
                             @endauth

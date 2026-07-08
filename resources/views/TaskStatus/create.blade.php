@@ -8,13 +8,7 @@
         </div>
 
         {{ html()->modelForm($taskStatus, 'POST', route('task_statuses.store'))->class('space-y-5')->open() }}
-            <div>
-                {{ html()->label(__('strings.name'))->for('name')->class('form-label') }}
-                {{ html()->input('text', 'name', old('name'))->value(old('name'))->class('form-input max-w-md') }}
-                @error('name')
-                    <div class="form-error">{{ $message }}</div>
-                @enderror
-            </div>
+            @include('TaskStatus._form', ['name' => old('name')])
 
             <div class="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
                 <a class="btn-secondary underline-offset-2 hover:underline" href="{{ route('task_statuses.index') }}">

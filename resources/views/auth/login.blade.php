@@ -14,33 +14,33 @@
         @csrf
 
         <div>
-            <x-input-label for="email" :value="__('Email')" class="form-label" />
-            <x-text-input id="email" class="form-input" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-input-label for="email" :value="__('strings.email')" class="form-label" />
+            <x-text-input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="form-error" />
         </div>
 
         <div>
-            <x-input-label for="password" :value="__('Пароль')" class="form-label" />
-            <x-text-input id="password" class="form-input" type="password" name="password" required autocomplete="current-password" />
+            <x-input-label for="password" :value="__('strings.password')" class="form-label" />
+            <x-text-input id="password" type="password" name="password" required autocomplete="current-password" />
             <x-input-error :messages="$errors->get('password')" class="form-error" />
         </div>
 
         <div>
             <label for="remember_me" class="inline-flex items-center">
                 <input id="remember_me" type="checkbox" class="rounded border-slate-300 text-blue-600 shadow-sm focus:ring-blue-500" name="remember">
-                <span class="ml-2 text-sm text-slate-600">{{ __('Запомнить меня') }}</span>
+                <span class="ml-2 text-sm text-slate-600">{{ __('strings.remember me') }}</span>
             </label>
         </div>
 
         <div class="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
             @if (Route::has('password.request'))
                 <a class="btn-secondary underline-offset-2 hover:underline" href="{{ route('password.request') }}">
-                    {{ __('Забыли пароль?') }}
+                    {{ __('strings.forgot password') }}
                 </a>
             @endif
 
-            <x-primary-button class="btn-primary sm:ml-auto">
-                {{ __('Войти') }}
+            <x-primary-button class="sm:ml-auto">
+                {{ __('strings.log in button') }}
             </x-primary-button>
         </div>
     </form>

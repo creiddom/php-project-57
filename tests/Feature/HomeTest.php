@@ -8,6 +8,7 @@ use Tests\TestCase;
 class HomeTest extends TestCase
 {
     use RefreshDatabase;
+
     public function testHomePageShowsGreeting(): void
     {
         $response = $this->get('/');

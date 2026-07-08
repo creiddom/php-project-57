@@ -16,11 +16,25 @@ setup:
 	npm ci
 	npm run build
 
-lint:
-	composer exec --verbose phpcs -- --standard=PSR12 app routes tests
+lint: lint-phpcs lint-phpstan
 
-lint-fix:
-	composer exec --verbose phpcbf -- --standard=PSR12 app routes tests
+lint-phpcs: vendor/bin/phpcs
+	@echo "Проверка стиля кода (phpcs)..."
+	@php vendor/bin/phpcs --standard=PSR12 app routes tests
+	@echo "phpcs: OK"
+
+lint-phpstan: vendor/bin/phpstan
+	@echo "Статический анализ (phpstan)..."
+	@php vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=256M
+	@echo "phpstan: OK"
+
+lint-fix: vendor/bin/phpcbf
+	@echo "Исправление стиля кода (phpcbf)..."
+	@php vendor/bin/phpcbf --standard=PSR12 app routes tests
+	@echo "phpcbf: OK"
+
+vendor/bin/phpcs vendor/bin/phpcbf vendor/bin/phpstan: composer.lock
+	composer install
 
 test:
 	php artisan test

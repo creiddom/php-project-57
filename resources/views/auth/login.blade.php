@@ -1,42 +1,47 @@
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <h2 class="text-center mb-5 max-w-2xl text-3xl md:text-3xl xl:text-3xl">
-        <a href="{{ route('home') }}">Менеджер задач</a>
-    </h2>
+    <div class="mb-6">
+        <h1 class="auth-title">
+            <a href="{{ route('home') }}" class="transition hover:text-blue-600">
+                {{ __('strings.task manager') }}
+            </a>
+        </h1>
+        <p class="auth-subtitle">{{ __('strings.log in') }}</p>
+    </div>
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" class="space-y-5" novalidate>
         @csrf
 
         <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+            <x-input-label for="email" :value="__('Email')" class="form-label" />
+            <x-text-input id="email" class="form-input" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="form-error" />
         </div>
 
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Пароль')" />
-            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div>
+            <x-input-label for="password" :value="__('Пароль')" class="form-label" />
+            <x-text-input id="password" class="form-input" type="password" name="password" required autocomplete="current-password" />
+            <x-input-error :messages="$errors->get('password')" class="form-error" />
         </div>
 
-        <div class="block mt-4">
+        <div>
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                <span class="ml-2 text-sm text-gray-600">{{ __('Запомнить меня') }}</span>
+                <input id="remember_me" type="checkbox" class="rounded border-slate-300 text-blue-600 shadow-sm focus:ring-blue-500" name="remember">
+                <span class="ml-2 text-sm text-slate-600">{{ __('Запомнить меня') }}</span>
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center sm:justify-between">
             @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                <a class="btn-secondary underline-offset-2 hover:underline" href="{{ route('password.request') }}">
                     {{ __('Забыли пароль?') }}
                 </a>
             @endif
 
-            <button type="submit" class="inline-flex items-center bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4">
+            <x-primary-button class="btn-primary sm:ml-auto">
                 {{ __('Войти') }}
-            </button>
+            </x-primary-button>
         </div>
     </form>
 </x-guest-layout>

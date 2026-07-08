@@ -3,6 +3,7 @@
 return [
 
     'required' => 'Это обязательное поле',
+    'email' => 'Неверный email-адрес',
 
     'custom' => [
         'password' => [

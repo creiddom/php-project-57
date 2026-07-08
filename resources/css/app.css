@@ -1,3 +1,95 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-slate-50 text-slate-800;
+    }
+}
+
+@layer components {
+    .app-header {
+        @apply sticky top-0 z-10 border-b border-slate-200/80 bg-white/90 backdrop-blur;
+    }
+
+    .app-container {
+        @apply mx-auto w-full max-w-5xl px-4 sm:px-6;
+    }
+
+    .app-brand {
+        @apply text-lg font-semibold tracking-tight text-slate-900 transition hover:text-blue-600;
+    }
+
+    .nav-link {
+        @apply rounded-md px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900;
+    }
+
+    .nav-link-primary {
+        @apply rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+    }
+
+    .nav-button {
+        @apply rounded-md px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900;
+    }
+
+    .page-card {
+        @apply rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8;
+    }
+
+    .auth-shell {
+        @apply flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-white to-blue-50 px-4 py-10;
+    }
+
+    .auth-card {
+        @apply w-full max-w-md rounded-2xl border border-slate-200 bg-white p-6 shadow-lg sm:p-8;
+    }
+
+    .auth-title {
+        @apply text-center text-2xl font-bold tracking-tight text-slate-900;
+    }
+
+    .auth-subtitle {
+        @apply mt-2 text-center text-sm text-slate-500;
+    }
+
+    .form-label {
+        @apply mb-1.5 block text-sm font-medium text-slate-700;
+    }
+
+    .form-input {
+        @apply block w-full rounded-lg border-slate-300 shadow-sm transition focus:border-blue-500 focus:ring-blue-500;
+    }
+
+    .form-error {
+        @apply mt-1.5 text-sm text-red-600;
+    }
+
+    .btn-primary {
+        @apply inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+    }
+
+    .btn-secondary {
+        @apply text-sm font-medium text-slate-600 transition hover:text-slate-900;
+    }
+
+    .flash-alert {
+        @apply mb-6 rounded-lg border px-4 py-3 text-sm;
+    }
+
+    .flash-alert-success {
+        @apply border-green-200 bg-green-50 text-green-800;
+    }
+
+    .flash-alert-danger {
+        @apply border-red-200 bg-red-50 text-red-800;
+    }
+
+    .flash-alert-warning {
+        @apply border-amber-200 bg-amber-50 text-amber-800;
+    }
+
+    .flash-alert-info {
+        @apply border-blue-200 bg-blue-50 text-blue-800;
+    }
+}

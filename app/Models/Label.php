@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Contracts\DeletableIfUnused;
 use App\Models\Concerns\DeletesIfUnused;
+use App\Models\Concerns\ProvidesSelectOptions;
 use Database\Factories\LabelFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,6 +17,7 @@ class Label extends Model implements DeletableIfUnused
     /** @use HasFactory<LabelFactory> */
     use HasFactory;
     use DeletesIfUnused;
+    use ProvidesSelectOptions;
 
     public const DEFAULT_NAMES = [
         'ошибка' => 'Какая-то ошибка в коде или проблема с функциональностью',

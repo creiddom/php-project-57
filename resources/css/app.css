@@ -108,4 +108,24 @@
     .label-badge {
         @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold uppercase leading-tight;
     }
+
+    .filter-select {
+        @apply max-w-full truncate rounded border border-gray-300 bg-white py-2 pl-3 pr-8 text-sm leading-tight;
+    }
+
+    .filter-select--status {
+        @apply min-w-[6.5rem];
+    }
+
+    .filter-select--author {
+        @apply min-w-[6rem];
+    }
+
+    .filter-select--executor {
+        @apply min-w-[9.5rem];
+    }
+
+    .filter-select--label {
+        @apply min-w-[6rem];
+    }
 }

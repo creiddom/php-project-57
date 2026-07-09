@@ -55,6 +55,74 @@ class TaskTest extends TestCase
 
         $response->assertOk();
         $response->assertSee($this->task->name, false);
+        $response->assertSee('name="filter[status_id]"', false);
+        $response->assertSee('name="filter[created_by_id]"', false);
+        $response->assertSee('name="filter[assigned_to_id]"', false);
+        $response->assertSee('name="filter[labels.id]"', false);
+        $response->assertSee(__('strings.apply'), false);
+    }
+
+    public function testIndexFilterByStatus(): void
+    {
+        $otherStatus = TaskStatus::factory()->create();
+        $filteredTask = Task::factory()->create([
+            'status_id' => $otherStatus->id,
+            'created_by_id' => $this->user->id,
+        ]);
+
+        $response = $this->get(route('tasks.index', [
+            'filter' => ['status_id' => $otherStatus->id],
+        ]));
+
+        $response->assertOk();
+        $response->assertSee($filteredTask->name, false);
+        $response->assertDontSee($this->task->name, false);
+    }
+
+    public function testIndexFilterByCreator(): void
+    {
+        $filteredTask = Task::factory()->create([
+            'status_id' => $this->taskStatus->id,
+            'created_by_id' => $this->otherUser->id,
+        ]);
+
+        $response = $this->get(route('tasks.index', [
+            'filter' => ['created_by_id' => $this->otherUser->id],
+        ]));
+
+        $response->assertOk();
+        $response->assertSee($filteredTask->name, false);
+        $response->assertDontSee($this->task->name, false);
+    }
+
+    public function testIndexFilterByExecutor(): void
+    {
+        $this->task->update(['assigned_to_id' => $this->otherUser->id]);
+
+        $response = $this->get(route('tasks.index', [
+            'filter' => ['assigned_to_id' => $this->otherUser->id],
+        ]));
+
+        $response->assertOk();
+        $response->assertSee($this->task->name, false);
+    }
+
+    public function testIndexFilterByLabel(): void
+    {
+        $this->task->labels()->attach($this->label);
+
+        $otherTask = Task::factory()->create([
+            'status_id' => $this->taskStatus->id,
+            'created_by_id' => $this->user->id,
+        ]);
+
+        $response = $this->get(route('tasks.index', [
+            'filter' => ['labels.id' => $this->label->id],
+        ]));
+
+        $response->assertOk();
+        $response->assertSee($this->task->name, false);
+        $response->assertDontSee($otherTask->name, false);
     }
 
     public function testCreate(): void

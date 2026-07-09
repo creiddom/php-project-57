@@ -1,17 +1,13 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="grid col-span-full">
-        <h1 class="mb-5 text-4xl md:text-4xl xl:text-5xl">{{ __('strings.create task') }}</h1>
-
-        <div>
-            {{ html()->modelForm($task, 'POST', route('tasks.store'))->open() }}
-                @include('Task._form', compact('task', 'taskStatuses', 'users', 'labels'))
-
-                <div class="mt-2">
-                    {{ html()->submit(__('strings.create'))->class('rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700') }}
-                </div>
-            {{ html()->closeModelForm() }}
-        </div>
-    </div>
+    @include('shared.resource-form-page', [
+        'title' => __('strings.create task'),
+        'model' => $task,
+        'method' => 'POST',
+        'action' => route('tasks.store'),
+        'formPartial' => 'Task._form',
+        'formData' => compact('task', 'taskStatuses', 'users', 'labels'),
+        'submitLabel' => __('strings.create'),
+    ])
 @endsection

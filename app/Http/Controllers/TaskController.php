@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\ProvidesTaskFormSelectOptions;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
-use App\Models\Label;
 use App\Models\Task;
-use App\Models\TaskStatus;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class TaskController extends Controller
 {
+    use ProvidesTaskFormSelectOptions;
+
     public function __construct()
     {
         $this->authorizeResource(Task::class, 'task', [
@@ -23,20 +22,27 @@ class TaskController extends Controller
 
     public function index(): View
     {
-        $tasks = Task::query()
-            ->with(['status', 'createdBy', 'assignedTo'])
-            ->orderBy('id')
-            ->get();
+        $filter = request()->input('filter', []);
 
-        return view('Task.index', compact('tasks'));
+        $tasks = Task::indexQuery()
+            ->with(Task::INDEX_RELATIONS)
+            ->orderBy('id')
+            ->paginate(Task::INDEX_PER_PAGE)
+            ->appends(request()->query());
+
+        return view('Task.index', [
+            'tasks' => $tasks,
+            'filter' => $filter,
+            ...$this->taskFormSelectOptions(),
+        ]);
     }
 
     public function create(): View
     {
-        $task = new Task();
-        ['taskStatuses' => $taskStatuses, 'users' => $users, 'labels' => $labels] = $this->formSelectOptions();
-
-        return view('Task.create', compact('task', 'taskStatuses', 'users', 'labels'));
+        return view('Task.create', [
+            'task' => new Task(),
+            ...$this->taskFormSelectOptions(),
+        ]);
     }
 
     public function store(StoreTaskRequest $request): RedirectResponse
@@ -65,9 +71,11 @@ class TaskController extends Controller
     public function edit(Task $task): View
     {
         $task->load('labels');
-        ['taskStatuses' => $taskStatuses, 'users' => $users, 'labels' => $labels] = $this->formSelectOptions();
 
-        return view('Task.edit', compact('task', 'taskStatuses', 'users', 'labels'));
+        return view('Task.edit', [
+            'task' => $task,
+            ...$this->taskFormSelectOptions(),
+        ]);
     }
 
     public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
@@ -89,22 +97,6 @@ class TaskController extends Controller
         flash(__('messages.task.deleted'))->success();
 
         return redirect()->route('tasks.index');
-    }
-
-    /**
-     * @return array{
-     *     taskStatuses: Collection<int|string, mixed>,
-     *     users: Collection<int|string, mixed>,
-     *     labels: Collection<int|string, mixed>
-     * }
-     */
-    private function formSelectOptions(): array
-    {
-        return [
-            'taskStatuses' => TaskStatus::query()->orderBy('name')->pluck('name', 'id'),
-            'users' => User::query()->orderBy('name')->pluck('name', 'id'),
-            'labels' => Label::query()->orderBy('name')->pluck('name', 'id'),
-        ];
     }
 
     /**

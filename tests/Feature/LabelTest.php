@@ -34,6 +34,7 @@ class LabelTest extends TestCase
         $response = $this->get(route('labels.index'));
 
         $response->assertStatus(200);
+        $response->assertSee($this->label->description, false);
     }
 
     public function testCreate(): void

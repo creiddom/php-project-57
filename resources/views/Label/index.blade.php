@@ -9,5 +9,6 @@
         'editRouteName' => 'labels.edit',
         'destroyRouteName' => 'labels.destroy',
         'inUseHint' => __('strings.label in use'),
+        'showDescription' => true,
     ])
 @endsection

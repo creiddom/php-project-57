@@ -1,5 +1,5 @@
 <div class="grid col-span-full">
-    <h1 class="mb-5 max-w-2xl text-4xl md:text-4xl xl:text-5xl">{{ $title }}</h1>
+    <h1 class="mb-5 text-4xl md:text-4xl xl:text-5xl">{{ $title }}</h1>
 
     <div>
         {{ html()->modelForm($model, $method, $action)->open() }}

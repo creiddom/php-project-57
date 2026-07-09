@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LabelController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskStatusController;
@@ -15,10 +16,12 @@ Route::get('/dashboard', function () {
 
 Route::get('tasks', [TaskController::class, 'index'])->name('tasks.index');
 Route::get('task_statuses', [TaskStatusController::class, 'index'])->name('task_statuses.index');
+Route::get('labels', [LabelController::class, 'index'])->name('labels.index');
 
 Route::middleware('auth')->group(function () {
     Route::resource('tasks', TaskController::class)->except(['index', 'show']);
     Route::resource('task_statuses', TaskStatusController::class)->except(['index']);
+    Route::resource('labels', LabelController::class)->except(['index']);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

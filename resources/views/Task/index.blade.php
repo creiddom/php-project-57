@@ -6,7 +6,7 @@
             <h1 class="max-w-2xl text-4xl md:text-4xl xl:text-5xl">{{ __('strings.tasks') }}</h1>
 
             @auth
-                <a href="{{ route('tasks.create') }}" class="bg-blue-500 hover:bg-blue-700 rounded px-4 py-2 font-bold text-white">
+                <a href="{{ route('tasks.create') }}" class="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
                     {{ __('strings.create task') }}
                 </a>
             @endauth
@@ -41,14 +41,14 @@
                         <td class="px-3 py-3">{{ $task->created_at->format('d.m.Y') }}</td>
                         @auth
                             <td class="space-x-3 px-3 py-3">
-                                @if ($task->created_by_id === Auth::id())
+                                @can('delete', $task)
                                     <a
                                         data-method="delete"
                                         data-confirm="{{ __('strings.are you sure') }}"
                                         class="text-red-600 hover:text-red-900"
                                         href="{{ route('tasks.destroy', $task) }}"
                                     >{{ __('strings.delete') }}</a>
-                                @endif
+                                @endcan
                                 <a
                                     class="text-blue-600 hover:text-blue-900"
                                     href="{{ route('tasks.edit', $task) }}"

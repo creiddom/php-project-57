@@ -6,7 +6,7 @@
 
         <div>
             {{ html()->modelForm($task, 'PATCH', route('tasks.update', $task))->open() }}
-                @include('Task._form', compact('task', 'taskStatuses', 'users'))
+                @include('Task._form', compact('task', 'taskStatuses', 'users', 'labels'))
 
                 <div class="mt-2">
                     {{ html()->submit(__('strings.update'))->class('rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700') }}

@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
+use App\Models\Label;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -27,6 +28,8 @@ abstract class TaskRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'status_id' => ['required', Rule::exists(TaskStatus::class, 'id')],
             'assigned_to_id' => ['nullable', Rule::exists(User::class, 'id')],
+            'labels' => ['nullable', 'array'],
+            'labels.*' => [Rule::exists(Label::class, 'id')],
         ];
     }
 

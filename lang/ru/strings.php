@@ -38,4 +38,8 @@ return [
     'author' => 'Автор',
     'task exists' => 'Задача с таким именем уже существует',
     'select placeholder' => '----------',
+    'labels' => 'Метки',
+    'create label' => 'Создать метку',
+    'edit label' => 'Изменение метки',
+    'label in use' => 'Используется в задачах',
 ];

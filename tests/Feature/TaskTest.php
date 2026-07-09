@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
@@ -18,6 +19,8 @@ class TaskTest extends TestCase
 
     private TaskStatus $taskStatus;
 
+    private Label $label;
+
     private Task $task;
 
     private array $taskFormData;
@@ -29,6 +32,7 @@ class TaskTest extends TestCase
         $this->user = User::factory()->create();
         $this->otherUser = User::factory()->create();
         $this->taskStatus = TaskStatus::factory()->create();
+        $this->label = Label::factory()->create();
         $this->task = Task::factory()->create([
             'created_by_id' => $this->user->id,
             'status_id' => $this->taskStatus->id,
@@ -61,6 +65,7 @@ class TaskTest extends TestCase
         $response->assertSee('name="name"', false);
         $response->assertSee('name="status_id"', false);
         $response->assertSee('name="assigned_to_id"', false);
+        $response->assertSee('name="labels[]"', false);
     }
 
     public function testCreateNotAuth(): void
@@ -74,12 +79,21 @@ class TaskTest extends TestCase
     {
         $response = $this
             ->actingAs($this->user)
-            ->post(route('tasks.store'), $this->taskFormData);
+            ->post(route('tasks.store'), [
+                ...$this->taskFormData,
+                'labels' => [$this->label->id],
+            ]);
 
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('tasks', [
             ...$this->taskFormData,
             'created_by_id' => $this->user->id,
+        ]);
+        $task = Task::query()->where('name', $this->taskFormData['name'])->first();
+        $this->assertNotNull($task);
+        $this->assertDatabaseHas('label_task', [
+            'label_id' => $this->label->id,
+            'task_id' => $task->id,
         ]);
         $response->assertRedirect(route('tasks.index'));
     }
@@ -122,10 +136,13 @@ class TaskTest extends TestCase
 
     public function testShow(): void
     {
+        $this->task->labels()->attach($this->label);
+
         $response = $this->get(route('tasks.show', $this->task));
 
         $response->assertOk();
         $response->assertSee($this->task->name, false);
+        $response->assertSee($this->label->name, false);
     }
 
     public function testEdit(): void
@@ -149,10 +166,17 @@ class TaskTest extends TestCase
     {
         $response = $this
             ->actingAs($this->user)
-            ->patch(route('tasks.update', ['task' => $this->task]), $this->taskFormData);
+            ->patch(route('tasks.update', ['task' => $this->task]), [
+                ...$this->taskFormData,
+                'labels' => [$this->label->id],
+            ]);
 
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('tasks', $this->taskFormData);
+        $this->assertDatabaseHas('label_task', [
+            'label_id' => $this->label->id,
+            'task_id' => $this->task->id,
+        ]);
         $response->assertRedirect(route('tasks.index'));
     }
 

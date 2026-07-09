@@ -23,6 +23,9 @@
                     <a href="{{ route('task_statuses.index') }}" class="header-nav-link">
                         {{ __('strings.statuses') }}
                     </a>
+                    <a href="{{ route('labels.index') }}" class="header-nav-link">
+                        {{ __('strings.labels') }}
+                    </a>
                     @auth
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf

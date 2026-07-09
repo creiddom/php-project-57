@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Contracts\DeletableIfUnused;
+use App\Models\Concerns\DeletesIfUnused;
 use Database\Factories\TaskStatusFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,10 +11,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[UsePolicy(\App\Policies\TaskStatusPolicy::class)]
-class TaskStatus extends Model
+class TaskStatus extends Model implements DeletableIfUnused
 {
     /** @use HasFactory<TaskStatusFactory> */
     use HasFactory;
+    use DeletesIfUnused;
 
     public const DEFAULT_NAMES = [
         'новый',
@@ -28,14 +31,5 @@ class TaskStatus extends Model
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class, 'status_id');
-    }
-
-    public function deleteIfUnused(): bool
-    {
-        if ($this->tasks()->exists()) {
-            return false;
-        }
-
-        return $this->delete();
     }
 }

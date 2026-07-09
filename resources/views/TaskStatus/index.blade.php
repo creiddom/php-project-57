@@ -1,53 +1,12 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="grid col-span-full">
-        <div class="mb-5 flex flex-wrap items-center justify-between gap-4">
-            <h1 class="max-w-2xl text-4xl md:text-4xl xl:text-5xl">{{ __('strings.statuses') }}</h1>
-
-            @auth
-                <a href="{{ route('task_statuses.create') }}" class="rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
-                    {{ __('strings.create status') }}
-                </a>
-            @endauth
-        </div>
-
-        <table class="mt-4 w-full">
-            <thead class="border-b-2 border-solid border-black text-left">
-                <tr>
-                    <th class="px-3 py-2">ID</th>
-                    <th class="px-3 py-2">{{ __('strings.name') }}</th>
-                    <th class="px-3 py-2">{{ __('strings.data created') }}</th>
-                    @auth
-                        <th class="px-3 py-2">{{ __('strings.actions') }}</th>
-                    @endauth
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($taskStatuses as $taskStatus)
-                    <tr class="border-b border-dashed text-left">
-                        <td class="px-3 py-3">{{ $taskStatus->id }}</td>
-                        <td class="px-3 py-3">{{ $taskStatus->name }}</td>
-                        <td class="px-3 py-3">{{ $taskStatus->created_at->format('d.m.Y') }}</td>
-                        @auth
-                            <td class="space-x-3 px-3 py-3">
-                                @if ($taskStatus->tasks_count === 0)
-                                    <a
-                                        data-method="delete"
-                                        data-confirm="{{ __('strings.are you sure') }}"
-                                        class="text-red-600 hover:text-red-900"
-                                        href="{{ route('task_statuses.destroy', $taskStatus) }}"
-                                    >{{ __('strings.delete') }}</a>
-                                @endif
-                                <a
-                                    class="text-blue-600 hover:text-blue-900"
-                                    href="{{ route('task_statuses.edit', $taskStatus) }}"
-                                >{{ __('strings.edit') }}</a>
-                            </td>
-                        @endauth
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+    @include('shared.simple-resource-index', [
+        'title' => __('strings.statuses'),
+        'createRoute' => route('task_statuses.create'),
+        'createLabel' => __('strings.create status'),
+        'items' => $taskStatuses,
+        'editRouteName' => 'task_statuses.edit',
+        'destroyRouteName' => 'task_statuses.destroy',
+    ])
 @endsection

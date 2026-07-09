@@ -3,7 +3,7 @@
         <h1 class="text-4xl md:text-4xl xl:text-5xl">{{ $title }}</h1>
 
         @auth
-            <a href="{{ $createRoute }}" class="shrink-0 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
+            <a href="{{ $createRoute }}" class="app-button shrink-0">
                 {{ $createLabel }}
             </a>
         @endauth

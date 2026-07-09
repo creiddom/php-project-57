@@ -56,7 +56,23 @@ class TaskStatusTest extends TestCase
     {
         $response = $this->get(route('task_statuses.index'));
 
-        $response->assertStatus(200);
+        $response->assertOk();
+        $response->assertSee($this->taskStatus->name, false);
+    }
+
+    public function testIndexShowsInUseHint(): void
+    {
+        Task::factory()->create([
+            'status_id' => $this->taskStatus->id,
+            'created_by_id' => $this->user->id,
+        ]);
+
+        $response = $this
+            ->actingAs($this->user)
+            ->get(route('task_statuses.index'));
+
+        $response->assertOk();
+        $response->assertSee(__('strings.status in use'), false);
     }
 
     public function testCreate(): void

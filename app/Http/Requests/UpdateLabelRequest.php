@@ -11,6 +11,6 @@ class UpdateLabelRequest extends LabelRequest
      */
     public function rules(): array
     {
-        return $this->labelRules();
+        return $this->labelRules($this->route('label'));
     }
 }

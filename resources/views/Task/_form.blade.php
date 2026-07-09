@@ -17,27 +17,8 @@
     :placeholder="__('strings.select placeholder')"
 />
 
-<div>
-    {{ html()->label(__('strings.labels'))->for('labels') }}
-</div>
-<div class="mt-2 space-y-1">
-    @foreach ($labels as $id => $name)
-        <div>
-            <label class="inline-flex items-center gap-2">
-                <input
-                    type="checkbox"
-                    name="labels[]"
-                    value="{{ $id }}"
-                    @checked(in_array($id, old('labels', $task->labels->pluck('id')->all())))
-                >
-                {{ $name }}
-            </label>
-        </div>
-    @endforeach
-</div>
-@error('labels')
-    <div class="text-rose-600">{{ $message }}</div>
-@enderror
-@error('labels.*')
-    <div class="text-rose-600">{{ $message }}</div>
-@enderror
+<x-form.checkbox-group
+    :label="__('strings.labels')"
+    :options="$labels"
+    :selected="$task->labels->pluck('id')->all()"
+/>

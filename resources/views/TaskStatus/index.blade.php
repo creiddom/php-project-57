@@ -8,5 +8,6 @@
         'items' => $taskStatuses,
         'editRouteName' => 'task_statuses.edit',
         'destroyRouteName' => 'task_statuses.destroy',
+        'inUseHint' => __('strings.status in use'),
     ])
 @endsection

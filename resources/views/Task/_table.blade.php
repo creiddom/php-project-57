@@ -36,10 +36,12 @@
                                     href="{{ route('tasks.destroy', $task) }}"
                                 >{{ __('strings.delete') }}</a>
                             @endcan
-                            <a
-                                class="ml-3 text-blue-600 hover:text-blue-900"
-                                href="{{ route('tasks.edit', $task) }}"
-                            >{{ __('strings.edit') }}</a>
+                            @can('update', $task)
+                                <a
+                                    class="ml-3 text-blue-600 hover:text-blue-900"
+                                    href="{{ route('tasks.edit', $task) }}"
+                                >{{ __('strings.edit') }}</a>
+                            @endcan
                         </td>
                     @endauth
                 </tr>

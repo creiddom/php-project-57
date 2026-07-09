@@ -29,6 +29,19 @@ class LabelTest extends TestCase
         $this->fakeNameForLabelUpdate = fake()->unique()->word();
     }
 
+    public function testSeederCreatesDefaultLabels(): void
+    {
+        Label::query()->delete();
+
+        $this->artisan('db:seed');
+
+        foreach (array_keys(Label::DEFAULT_NAMES) as $name) {
+            $this->assertDatabaseHas('labels', ['name' => $name]);
+        }
+
+        $this->assertDatabaseCount('labels', count(Label::DEFAULT_NAMES));
+    }
+
     public function testIndex(): void
     {
         $response = $this->get(route('labels.index'));
@@ -93,6 +106,20 @@ class LabelTest extends TestCase
         $response->assertRedirect(route('labels.create'));
     }
 
+    public function testStoreDuplicateName(): void
+    {
+        $response = $this
+            ->actingAs($this->user)
+            ->from(route('labels.create'))
+            ->post(route('labels.store'), [
+                'name' => $this->label->name,
+                'description' => 'Duplicate',
+            ]);
+
+        $response->assertSessionHasErrors('name');
+        $response->assertRedirect(route('labels.create'));
+    }
+
     public function testEdit(): void
     {
         $response = $this
@@ -134,6 +161,22 @@ class LabelTest extends TestCase
             ->from(route('labels.edit', ['label' => $this->label]))
             ->patch(route('labels.update', ['label' => $this->label]), [
                 'name' => '',
+            ]);
+
+        $response->assertSessionHasErrors('name');
+        $response->assertRedirect(route('labels.edit', ['label' => $this->label]));
+    }
+
+    public function testUpdateDuplicateName(): void
+    {
+        $anotherLabel = Label::factory()->create();
+
+        $response = $this
+            ->actingAs($this->user)
+            ->from(route('labels.edit', ['label' => $this->label]))
+            ->patch(route('labels.update', ['label' => $this->label]), [
+                'name' => $anotherLabel->name,
+                'description' => 'Duplicate',
             ]);
 
         $response->assertSessionHasErrors('name');

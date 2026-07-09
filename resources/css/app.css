@@ -109,6 +109,10 @@
         @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold uppercase leading-tight;
     }
 
+    .app-button {
+        @apply rounded bg-blue-500 px-4 py-2 text-sm font-bold text-white hover:bg-blue-700;
+    }
+
     .filter-select {
         @apply max-w-full truncate rounded border border-gray-300 bg-white py-2 pl-3 pr-8 text-sm leading-tight;
     }

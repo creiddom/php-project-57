@@ -6,7 +6,7 @@
             @include($formPartial, $formData)
 
             <div class="mt-2">
-                {{ html()->submit($submitLabel)->class('rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700') }}
+                {{ html()->submit($submitLabel)->class('app-button') }}
             </div>
         {{ html()->closeModelForm() }}
     </div>

@@ -125,6 +125,55 @@ class TaskTest extends TestCase
         $response->assertDontSee($otherTask->name, false);
     }
 
+    public function testIndexFilterByCombinedFilters(): void
+    {
+        $this->task->update(['assigned_to_id' => $this->otherUser->id]);
+        $this->task->labels()->attach($this->label);
+
+        $otherTask = Task::factory()->create([
+            'status_id' => $this->taskStatus->id,
+            'created_by_id' => $this->user->id,
+            'assigned_to_id' => $this->otherUser->id,
+        ]);
+
+        $response = $this->get(route('tasks.index', [
+            'filter' => [
+                'status_id' => $this->taskStatus->id,
+                'assigned_to_id' => $this->otherUser->id,
+                'labels.id' => $this->label->id,
+            ],
+        ]));
+
+        $response->assertOk();
+        $response->assertSee($this->task->name, false);
+        $response->assertDontSee($otherTask->name, false);
+    }
+
+    public function testIndexPaginationPreservesFilters(): void
+    {
+        $status = TaskStatus::factory()->create();
+
+        Task::factory()->count(16)->create([
+            'status_id' => $status->id,
+            'created_by_id' => $this->user->id,
+        ]);
+
+        $taskOnSecondPage = Task::query()
+            ->where('status_id', $status->id)
+            ->orderBy('id')
+            ->skip(15)
+            ->value('name');
+
+        $response = $this->get(route('tasks.index', [
+            'filter' => ['status_id' => $status->id],
+            'page' => 2,
+        ]));
+
+        $response->assertOk();
+        $response->assertSee($taskOnSecondPage, false);
+        $response->assertSee('filter%5Bstatus_id%5D=' . $status->id, false);
+    }
+
     public function testCreate(): void
     {
         $response = $this->actingAs($this->user)->get(route('tasks.create'));

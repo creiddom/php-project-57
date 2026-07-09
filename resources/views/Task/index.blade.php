@@ -6,11 +6,11 @@
 
         <div class="mb-4 flex w-full flex-wrap items-center gap-4">
             <div>
-                @include('Task._filter', compact('tasks', 'taskStatuses', 'users', 'labels', 'filter'))
+                @include('Task._filter', compact('taskStatuses', 'users', 'labels'))
             </div>
 
             @auth
-                <a href="{{ route('tasks.create') }}" class="ml-auto shrink-0 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
+                <a href="{{ route('tasks.create') }}" class="app-button ml-auto shrink-0">
                     {{ __('strings.create task') }}
                 </a>
             @endauth

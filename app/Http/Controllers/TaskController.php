@@ -22,8 +22,6 @@ class TaskController extends Controller
 
     public function index(): View
     {
-        $filter = request()->input('filter', []);
-
         $tasks = Task::indexQuery()
             ->with(Task::INDEX_RELATIONS)
             ->orderBy('id')
@@ -32,7 +30,6 @@ class TaskController extends Controller
 
         return view('Task.index', [
             'tasks' => $tasks,
-            'filter' => $filter,
             ...$this->taskFormSelectOptions(),
         ]);
     }

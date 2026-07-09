@@ -34,12 +34,34 @@ class AuthenticationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $this->post('/login', [
-            'email' => $user->email,
-            'password' => 'wrong-password',
-        ]);
+        $response = $this
+            ->from(route('login'))
+            ->post('/login', [
+                'email' => $user->email,
+                'password' => 'wrong-password',
+            ]);
 
         $this->assertGuest();
+        $response->assertRedirect(route('login'));
+        $response->assertSessionHasErrors([
+            'email' => __('auth.failed'),
+        ]);
+    }
+
+    public function testLoginWithWrongCredentialsShowsValidationMessage(): void
+    {
+        $response = $this
+            ->from(route('login'))
+            ->post('/login', [
+                'email' => 'nobody@hexlet.io',
+                'password' => 'wrong-password',
+            ]);
+
+        $response->assertRedirect(route('login'));
+
+        $response = $this->get(route('login'));
+        $response->assertOk();
+        $response->assertSee(__('auth.failed'), false);
     }
 
     public function testUsersCanLogout(): void

@@ -16,13 +16,17 @@
         <div>
             <x-input-label for="email" :value="__('strings.email')" class="form-label" />
             <x-text-input id="email" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="form-error" />
+            @error('email')
+                <div class="form-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div>
             <x-input-label for="password" :value="__('strings.password')" class="form-label" />
             <x-text-input id="password" type="password" name="password" required autocomplete="current-password" />
-            <x-input-error :messages="$errors->get('password')" class="form-error" />
+            @error('password')
+                <div class="form-error">{{ $message }}</div>
+            @enderror
         </div>
 
         <div>

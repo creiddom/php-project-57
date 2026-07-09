@@ -27,12 +27,11 @@
                         {{ __('strings.labels') }}
                     </a>
                     @auth
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="nav-button">
-                                {{ __('strings.log out') }}
-                            </button>
-                        </form>
+                        <a
+                            data-method="post"
+                            href="{{ route('logout') }}"
+                            class="nav-button"
+                        >{{ __('strings.log out') }}</a>
                     @else
                         <a href="{{ route('login') }}" class="header-nav-link">
                             {{ __('strings.log in') }}

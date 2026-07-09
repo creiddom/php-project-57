@@ -1,18 +1,19 @@
-name: SonarCloud
+name: Build
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
   pull_request:
-    branches: ["main"]
-  workflow_dispatch:
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: read
   pull-requests: write
 
 jobs:
-  sonarcloud:
+  sonarqube:
+    name: SonarQube
     runs-on: ubuntu-latest
 
     services:
@@ -31,7 +32,7 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
 
@@ -43,12 +44,13 @@ jobs:
           coverage: xdebug
 
       - name: Install dependencies
-        run: composer install
+        run: composer install --no-interaction --prefer-dist
 
       - name: Prepare application
         run: |
           cp -n .env.example .env
           php artisan key:generate
+          mkdir -p build/logs
 
       - name: Run migrations (PostgreSQL)
         run: php artisan migrate --force
@@ -56,8 +58,7 @@ jobs:
       - name: Run tests with coverage
         run: make test-coverage
 
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@7006c4492b2e0ee0f816d36501671557c97f5995 # v8.1.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

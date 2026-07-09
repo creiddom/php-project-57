@@ -7,6 +7,24 @@
 
 [Менеджер задач](https://php-project-57-q8e4.onrender.com)
 
+### Деплой на Render
+
+Проект использует `Dockerfile`, в котором уже есть `npm run build`. После каждого пуша в `main` Render должен пересобрать образ.
+
+На Render в Environment задайте:
+
+- `APP_ENV=production`
+- `APP_DEBUG=false`
+- `APP_URL=https://php-project-57-q8e4.onrender.com` (ваш URL, обязательно `https://`)
+- `APP_KEY` — сгенерируйте локально: `php artisan key:generate --show`
+- переменные PostgreSQL от Render (`DB_CONNECTION=pgsql`, `DB_HOST`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`)
+
+Если стили не применяются после деплоя:
+
+1. Убедитесь, что в Build Logs есть шаг `npm run build`.
+2. Проверьте, что `APP_URL` начинается с `https://`.
+3. Запустите **Manual Deploy → Clear build cache & deploy**.
+
 ### Требования
 
 - PHP >= 8.4

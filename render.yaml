@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: php-project-57
+    runtime: docker
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: APP_URL
+        value: https://php-project-57-q8e4.onrender.com

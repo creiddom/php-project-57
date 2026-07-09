@@ -104,4 +104,48 @@
     .home-hero-button {
         @apply inline-flex w-auto shrink-0 items-center justify-center rounded border border-slate-900 bg-white px-4 py-2 font-medium text-slate-900 no-underline transition hover:bg-slate-50;
     }
+
+    .label-badge {
+        @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-bold uppercase leading-tight;
+    }
+
+    .label-badge--0 {
+        @apply bg-blue-100 text-blue-800;
+    }
+
+    .label-badge--1 {
+        @apply bg-sky-100 text-sky-800;
+    }
+
+    .label-badge--2 {
+        @apply bg-indigo-100 text-indigo-800;
+    }
+
+    .label-badge--3 {
+        @apply bg-violet-100 text-violet-800;
+    }
+
+    .label-badge--4 {
+        @apply bg-teal-100 text-teal-800;
+    }
+
+    .label-badge--5 {
+        @apply bg-emerald-100 text-emerald-800;
+    }
+
+    .label-badge--6 {
+        @apply bg-cyan-100 text-cyan-800;
+    }
+
+    .label-badge--7 {
+        @apply bg-amber-100 text-amber-800;
+    }
+
+    .label-badge--8 {
+        @apply bg-rose-100 text-rose-800;
+    }
+
+    .label-badge--9 {
+        @apply bg-fuchsia-100 text-fuchsia-800;
+    }
 }

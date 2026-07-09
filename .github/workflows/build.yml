@@ -43,6 +43,12 @@ jobs:
           extensions: pdo_pgsql, pgsql
           coverage: xdebug
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist
 
@@ -51,6 +57,9 @@ jobs:
           cp -n .env.example .env
           php artisan key:generate
           mkdir -p build/logs
+
+      - name: Build frontend assets
+        run: npm ci && npm run build
 
       - name: Run migrations (PostgreSQL)
         run: php artisan migrate --force

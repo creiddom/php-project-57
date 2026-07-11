@@ -27,6 +27,9 @@
                         {{ __('strings.labels') }}
                     </a>
                     @auth
+                        <a href="{{ route('profile.edit') }}" class="header-nav-link">
+                            {{ __('strings.profile') }}
+                        </a>
                         <a
                             data-method="post"
                             href="{{ route('logout') }}"

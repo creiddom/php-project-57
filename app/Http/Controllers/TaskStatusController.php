@@ -2,22 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Concerns\DestroysUnusedResource;
 use App\Http\Requests\StoreTaskStatusRequest;
 use App\Http\Requests\UpdateTaskStatusRequest;
 use App\Models\TaskStatus;
+use App\Services\UnusedResourceDeletionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class TaskStatusController extends Controller
 {
-    use DestroysUnusedResource;
-
-    public function __construct()
-    {
-        $this->authorizeResource(TaskStatus::class, 'task_status', [
-            'except' => ['index'],
-        ]);
+    public function __construct(
+        private readonly UnusedResourceDeletionService $deletionService,
+    ) {
+        $this->authorizeResource(TaskStatus::class, 'task_status');
     }
 
     public function index(): View
@@ -62,7 +59,7 @@ class TaskStatusController extends Controller
 
     public function destroy(TaskStatus $taskStatus): RedirectResponse
     {
-        return $this->destroyUnusedAndRedirect(
+        return $this->deletionService->destroyAndRedirect(
             $taskStatus,
             __('messages.status.deleted'),
             __('messages.status.deleted.error'),

@@ -35,11 +35,11 @@ class LabelTest extends TestCase
 
         $this->artisan('db:seed');
 
-        foreach (array_keys(Label::DEFAULT_NAMES) as $name) {
+        foreach (['ошибка', 'документация', 'дубликат', 'доработка'] as $name) {
             $this->assertDatabaseHas('labels', ['name' => $name]);
         }
 
-        $this->assertDatabaseCount('labels', count(Label::DEFAULT_NAMES));
+        $this->assertDatabaseCount('labels', 4);
     }
 
     public function testIndex(): void
@@ -63,7 +63,7 @@ class LabelTest extends TestCase
     {
         $response = $this->get(route('labels.create'));
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testStore(): void
@@ -90,7 +90,7 @@ class LabelTest extends TestCase
                 'name' => 'newTestLabel',
             ]);
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testStoreValidation(): void
@@ -134,7 +134,7 @@ class LabelTest extends TestCase
     {
         $response = $this->get(route('labels.edit', ['label' => $this->label]));
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testUpdate(): void
@@ -190,7 +190,7 @@ class LabelTest extends TestCase
                 'name' => 'test',
             ]);
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testDestroyNotAuth(): void
@@ -198,7 +198,7 @@ class LabelTest extends TestCase
         $response = $this
             ->delete(route('labels.destroy', ['label' => $this->label]));
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testDestroy(): void

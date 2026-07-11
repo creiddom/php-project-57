@@ -189,7 +189,7 @@ class TaskTest extends TestCase
     {
         $response = $this->get(route('tasks.create'));
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testStore(): void
@@ -219,7 +219,7 @@ class TaskTest extends TestCase
     {
         $response = $this->post(route('tasks.store'), $this->taskFormData);
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testStoreValidation(): void
@@ -276,7 +276,7 @@ class TaskTest extends TestCase
     {
         $response = $this->get(route('tasks.edit', ['task' => $this->task]));
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testUpdate(): void
@@ -302,7 +302,7 @@ class TaskTest extends TestCase
         $response = $this
             ->patch(route('tasks.update', ['task' => $this->task]), $this->taskFormData);
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testUpdateValidation(): void
@@ -363,6 +363,6 @@ class TaskTest extends TestCase
     {
         $response = $this->delete(route('tasks.destroy', ['task' => $this->task]));
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 }

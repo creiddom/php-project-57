@@ -2,35 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Concerns\ProvidesTaskFormSelectOptions;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
+use App\Services\TaskFormOptionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TaskController extends Controller
 {
-    use ProvidesTaskFormSelectOptions;
-
-    public function __construct()
-    {
-        $this->authorizeResource(Task::class, 'task', [
-            'except' => ['index', 'show'],
-        ]);
+    public function __construct(
+        private readonly TaskFormOptionsService $taskFormOptions,
+    ) {
+        $this->authorizeResource(Task::class, 'task');
     }
 
     public function index(): View
     {
-        $tasks = Task::indexQuery()
-            ->with(Task::INDEX_RELATIONS)
+        $tasks = QueryBuilder::for(Task::class)
+            ->allowedFilters([
+                AllowedFilter::exact('status_id'),
+                AllowedFilter::exact('created_by_id'),
+                AllowedFilter::exact('assigned_to_id'),
+                AllowedFilter::exact('labels.id'),
+            ])
+            ->with(['status', 'createdBy', 'assignedTo'])
             ->orderBy('id')
-            ->paginate(Task::INDEX_PER_PAGE)
+            ->paginate(15)
             ->appends(request()->query());
 
         return view('Task.index', [
             'tasks' => $tasks,
-            ...$this->taskFormSelectOptions(),
+            ...$this->taskFormOptions->get(),
         ]);
     }
 
@@ -38,7 +43,7 @@ class TaskController extends Controller
     {
         return view('Task.create', [
             'task' => new Task(),
-            ...$this->taskFormSelectOptions(),
+            ...$this->taskFormOptions->get(),
         ]);
     }
 
@@ -46,11 +51,7 @@ class TaskController extends Controller
     {
         [$attributes, $labelIds] = $this->splitValidatedLabels($request->validated());
 
-        $task = Task::query()->create([
-            ...$attributes,
-            'created_by_id' => $request->user()->id,
-        ]);
-
+        $task = $request->user()->createdTasks()->create($attributes);
         $task->labels()->sync($labelIds);
 
         flash(__('messages.task.created'))->success();
@@ -71,7 +72,7 @@ class TaskController extends Controller
 
         return view('Task.edit', [
             'task' => $task,
-            ...$this->taskFormSelectOptions(),
+            ...$this->taskFormOptions->get(),
         ]);
     }
 

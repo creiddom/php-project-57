@@ -35,11 +35,11 @@ class TaskStatusTest extends TestCase
 
         $this->artisan('db:seed');
 
-        foreach (TaskStatus::DEFAULT_NAMES as $name) {
+        foreach (['новый', 'в работе', 'на тестировании', 'завершен'] as $name) {
             $this->assertDatabaseHas('task_statuses', ['name' => $name]);
         }
 
-        $this->assertDatabaseCount('task_statuses', count(TaskStatus::DEFAULT_NAMES));
+        $this->assertDatabaseCount('task_statuses', 4);
     }
 
     public function testSeederIsIdempotent(): void
@@ -49,7 +49,7 @@ class TaskStatusTest extends TestCase
         $this->artisan('db:seed');
         $this->artisan('db:seed');
 
-        $this->assertDatabaseCount('task_statuses', count(TaskStatus::DEFAULT_NAMES));
+        $this->assertDatabaseCount('task_statuses', 4);
     }
 
     public function testIndex(): void
@@ -87,7 +87,7 @@ class TaskStatusTest extends TestCase
     {
         $response = $this->get(route('task_statuses.create'));
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testStore(): void
@@ -110,7 +110,7 @@ class TaskStatusTest extends TestCase
                 'name' => 'newTestStatus',
             ]);
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testStoreValidation(): void
@@ -153,7 +153,7 @@ class TaskStatusTest extends TestCase
     {
         $response = $this->get(route('task_statuses.edit', ['task_status' => $this->taskStatus]));
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testUpdate(): void
@@ -204,7 +204,7 @@ class TaskStatusTest extends TestCase
                 'name' => 'test',
             ]);
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testDestroyNotAuth(): void
@@ -212,7 +212,7 @@ class TaskStatusTest extends TestCase
         $response = $this
             ->delete(route('task_statuses.destroy', ['task_status' => $this->taskStatus]));
 
-        $response->assertRedirect(route('login'));
+        $response->assertForbidden();
     }
 
     public function testDestroy(): void

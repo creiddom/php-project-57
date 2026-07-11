@@ -2,22 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Concerns\DestroysUnusedResource;
 use App\Http\Requests\StoreLabelRequest;
 use App\Http\Requests\UpdateLabelRequest;
 use App\Models\Label;
+use App\Services\UnusedResourceDeletionService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class LabelController extends Controller
 {
-    use DestroysUnusedResource;
-
-    public function __construct()
-    {
-        $this->authorizeResource(Label::class, 'label', [
-            'except' => ['index'],
-        ]);
+    public function __construct(
+        private readonly UnusedResourceDeletionService $deletionService,
+    ) {
+        $this->authorizeResource(Label::class, 'label');
     }
 
     public function index(): View
@@ -62,7 +59,7 @@ class LabelController extends Controller
 
     public function destroy(Label $label): RedirectResponse
     {
-        return $this->destroyUnusedAndRedirect(
+        return $this->deletionService->destroyAndRedirect(
             $label,
             __('messages.label.deleted'),
             __('messages.label.deleted.error'),

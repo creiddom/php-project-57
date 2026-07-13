@@ -187,9 +187,7 @@ class TaskTest extends TestCase
 
     public function testCreateNotAuth(): void
     {
-        $response = $this->get(route('tasks.create'));
-
-        $response->assertForbidden();
+        $this->assertGuestGetForbidden(route('tasks.create'));
     }
 
     public function testStore(): void
@@ -212,14 +210,12 @@ class TaskTest extends TestCase
             'label_id' => $this->label->id,
             'task_id' => $task->id,
         ]);
-        $response->assertRedirect(route('tasks.index'));
+        $this->assertRedirectToRouteWithSuccess($response, 'tasks.index');
     }
 
     public function testStoreNotAuth(): void
     {
-        $response = $this->post(route('tasks.store'), $this->taskFormData);
-
-        $response->assertForbidden();
+        $this->assertGuestPostForbidden(route('tasks.store'), $this->taskFormData);
     }
 
     public function testStoreValidation(): void
@@ -233,7 +229,7 @@ class TaskTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors(['name', 'status_id']);
-        $response->assertRedirect(route('tasks.create'));
+        $response->assertRedirectToRoute('tasks.create');
     }
 
     public function testStoreDuplicateName(): void
@@ -248,7 +244,7 @@ class TaskTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('name');
-        $response->assertRedirect(route('tasks.create'));
+        $response->assertRedirectToRoute('tasks.create');
     }
 
     public function testShow(): void
@@ -274,9 +270,7 @@ class TaskTest extends TestCase
 
     public function testEditNotAuth(): void
     {
-        $response = $this->get(route('tasks.edit', ['task' => $this->task]));
-
-        $response->assertForbidden();
+        $this->assertGuestGetForbidden(route('tasks.edit', ['task' => $this->task]));
     }
 
     public function testUpdate(): void
@@ -294,15 +288,12 @@ class TaskTest extends TestCase
             'label_id' => $this->label->id,
             'task_id' => $this->task->id,
         ]);
-        $response->assertRedirect(route('tasks.index'));
+        $this->assertRedirectToRouteWithSuccess($response, 'tasks.index');
     }
 
     public function testUpdateNotAuth(): void
     {
-        $response = $this
-            ->patch(route('tasks.update', ['task' => $this->task]), $this->taskFormData);
-
-        $response->assertForbidden();
+        $this->assertGuestPatchForbidden(route('tasks.update', ['task' => $this->task]), $this->taskFormData);
     }
 
     public function testUpdateValidation(): void
@@ -316,7 +307,7 @@ class TaskTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors(['name', 'status_id']);
-        $response->assertRedirect(route('tasks.edit', ['task' => $this->task]));
+        $response->assertRedirectToRoute('tasks.edit', ['task' => $this->task]);
     }
 
     public function testUpdateDuplicateName(): void
@@ -335,7 +326,7 @@ class TaskTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('name');
-        $response->assertRedirect(route('tasks.edit', ['task' => $this->task]));
+        $response->assertRedirectToRoute('tasks.edit', ['task' => $this->task]);
     }
 
     public function testDestroy(): void
@@ -346,7 +337,20 @@ class TaskTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseMissing('tasks', ['id' => $this->task->id]);
-        $response->assertRedirect(route('tasks.index'));
+        $this->assertRedirectToRouteWithSuccess($response, 'tasks.index');
+    }
+
+    public function testUpdateNotByCreator(): void
+    {
+        $response = $this
+            ->actingAs($this->otherUser)
+            ->patch(route('tasks.update', ['task' => $this->task]), $this->taskFormData);
+
+        $response->assertStatus(403);
+        $this->assertDatabaseHas('tasks', [
+            'id' => $this->task->id,
+            'name' => $this->task->name,
+        ]);
     }
 
     public function testDestroyNotByCreator(): void
@@ -361,8 +365,6 @@ class TaskTest extends TestCase
 
     public function testDestroyNotAuth(): void
     {
-        $response = $this->delete(route('tasks.destroy', ['task' => $this->task]));
-
-        $response->assertForbidden();
+        $this->assertGuestDeleteForbidden(route('tasks.destroy', ['task' => $this->task]));
     }
 }

@@ -24,11 +24,16 @@ class TaskPolicy
 
     public function update(User $user, Task $task): bool
     {
-        return true;
+        return $this->isCreator($user, $task);
     }
 
     public function delete(User $user, Task $task): bool
     {
-        return $task->createdBy->is($user);
+        return $this->isCreator($user, $task);
+    }
+
+    private function isCreator(User $user, Task $task): bool
+    {
+        return $task->createdBy()->whereKey($user->getKey())->exists();
     }
 }

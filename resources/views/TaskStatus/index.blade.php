@@ -3,6 +3,7 @@
 @section('content')
     @include('shared.simple-resource-index', [
         'title' => __('strings.statuses'),
+        'modelClass' => \App\Models\TaskStatus::class,
         'createRoute' => route('task_statuses.create'),
         'createLabel' => __('strings.create status'),
         'items' => $taskStatuses,

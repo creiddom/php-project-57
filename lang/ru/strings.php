@@ -8,7 +8,6 @@ return [
     'log in' => 'Вход',
     'log out' => 'Выход',
     'registration' => 'Регистрация',
-    'profile' => 'Профиль',
     'name' => 'Имя',
     'email' => 'Email',
     'password' => 'Пароль',

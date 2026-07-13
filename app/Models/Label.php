@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Contracts\DeletableIfUnused;
+use App\Models\Concerns\DeletesIfUnused;
 use Database\Factories\LabelFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,8 +11,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 #[UsePolicy(\App\Policies\LabelPolicy::class)]
-class Label extends Model
+class Label extends Model implements DeletableIfUnused
 {
+    use DeletesIfUnused;
+
     /** @use HasFactory<LabelFactory> */
     use HasFactory;
 
@@ -22,5 +26,10 @@ class Label extends Model
     public function tasks(): BelongsToMany
     {
         return $this->belongsToMany(Task::class);
+    }
+
+    public function isInUse(): bool
+    {
+        return $this->tasks()->exists();
     }
 }

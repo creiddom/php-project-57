@@ -61,9 +61,7 @@ class LabelTest extends TestCase
 
     public function testCreateNotAuth(): void
     {
-        $response = $this->get(route('labels.create'));
-
-        $response->assertForbidden();
+        $this->assertGuestGetForbidden(route('labels.create'));
     }
 
     public function testStore(): void
@@ -80,17 +78,14 @@ class LabelTest extends TestCase
             'name' => $this->fakeNameForLabel,
             'description' => 'Test description',
         ]);
-        $response->assertRedirect(route('labels.index'));
+        $this->assertRedirectToRouteWithSuccess($response, 'labels.index');
     }
 
     public function testStoreNotAuth(): void
     {
-        $response = $this
-            ->post(route('labels.store'), [
-                'name' => 'newTestLabel',
-            ]);
-
-        $response->assertForbidden();
+        $this->assertGuestPostForbidden(route('labels.store'), [
+            'name' => 'newTestLabel',
+        ]);
     }
 
     public function testStoreValidation(): void
@@ -103,7 +98,7 @@ class LabelTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('name');
-        $response->assertRedirect(route('labels.create'));
+        $response->assertRedirectToRoute('labels.create');
     }
 
     public function testStoreDuplicateName(): void
@@ -117,7 +112,7 @@ class LabelTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('name');
-        $response->assertRedirect(route('labels.create'));
+        $response->assertRedirectToRoute('labels.create');
     }
 
     public function testEdit(): void
@@ -132,9 +127,7 @@ class LabelTest extends TestCase
 
     public function testEditNotAuth(): void
     {
-        $response = $this->get(route('labels.edit', ['label' => $this->label]));
-
-        $response->assertForbidden();
+        $this->assertGuestGetForbidden(route('labels.edit', ['label' => $this->label]));
     }
 
     public function testUpdate(): void
@@ -151,7 +144,7 @@ class LabelTest extends TestCase
             'name' => $this->fakeNameForLabelUpdate,
             'description' => 'Updated description',
         ]);
-        $response->assertRedirect(route('labels.index'));
+        $this->assertRedirectToRouteWithSuccess($response, 'labels.index');
     }
 
     public function testUpdateValidation(): void
@@ -164,7 +157,7 @@ class LabelTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('name');
-        $response->assertRedirect(route('labels.edit', ['label' => $this->label]));
+        $response->assertRedirectToRoute('labels.edit', ['label' => $this->label]);
     }
 
     public function testUpdateDuplicateName(): void
@@ -180,25 +173,19 @@ class LabelTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('name');
-        $response->assertRedirect(route('labels.edit', ['label' => $this->label]));
+        $response->assertRedirectToRoute('labels.edit', ['label' => $this->label]);
     }
 
     public function testUpdateNotAuth(): void
     {
-        $response = $this
-            ->patch(route('labels.update', ['label' => $this->label]), [
-                'name' => 'test',
-            ]);
-
-        $response->assertForbidden();
+        $this->assertGuestPatchForbidden(route('labels.update', ['label' => $this->label]), [
+            'name' => 'test',
+        ]);
     }
 
     public function testDestroyNotAuth(): void
     {
-        $response = $this
-            ->delete(route('labels.destroy', ['label' => $this->label]));
-
-        $response->assertForbidden();
+        $this->assertGuestDeleteForbidden(route('labels.destroy', ['label' => $this->label]));
     }
 
     public function testDestroy(): void
@@ -209,7 +196,7 @@ class LabelTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseMissing('labels', ['id' => $this->label->id]);
-        $response->assertRedirect(route('labels.index'));
+        $this->assertRedirectToRouteWithSuccess($response, 'labels.index');
     }
 
     public function testDestroyWhenLabelHasTasks(): void
@@ -223,8 +210,7 @@ class LabelTest extends TestCase
             ->actingAs($this->user)
             ->delete(route('labels.destroy', ['label' => $this->label]));
 
-        $response->assertRedirect(route('labels.index'));
-        $response->assertSessionHas('flash_notification');
+        $this->assertRedirectToRouteWithError($response, 'labels.index');
         $this->assertDatabaseHas('labels', ['id' => $this->label->id]);
     }
 }

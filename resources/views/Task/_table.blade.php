@@ -8,9 +8,9 @@
                 <th class="whitespace-nowrap px-3 py-2">{{ __('strings.author') }}</th>
                 <th class="whitespace-nowrap px-3 py-2">{{ __('strings.executor') }}</th>
                 <th class="whitespace-nowrap px-3 py-2">{{ __('strings.data created') }}</th>
-                @auth
+                @can('create', \App\Models\Task::class)
                     <th class="whitespace-nowrap px-3 py-2">{{ __('strings.actions') }}</th>
-                @endauth
+                @endcan
             </tr>
         </thead>
         <tbody>
@@ -26,7 +26,7 @@
                     <td class="whitespace-nowrap px-3 py-3">{{ $task->createdBy->name }}</td>
                     <td class="whitespace-nowrap px-3 py-3">{{ $task->assignedTo?->name }}</td>
                     <td class="whitespace-nowrap px-3 py-3">{{ $task->created_at->format('d.m.Y') }}</td>
-                    @auth
+                    @can('create', \App\Models\Task::class)
                         <td class="whitespace-nowrap px-3 py-3">
                             @can('delete', $task)
                                 <a
@@ -43,7 +43,7 @@
                                 >{{ __('strings.edit') }}</a>
                             @endcan
                         </td>
-                    @endauth
+                    @endcan
                 </tr>
             @endforeach
         </tbody>

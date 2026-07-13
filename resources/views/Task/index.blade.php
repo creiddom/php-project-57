@@ -6,14 +6,14 @@
 
         <div class="mb-4 flex w-full flex-wrap items-center gap-4">
             <div>
-                @include('Task._filter', compact('taskStatuses', 'users', 'labels'))
+                @include('Task._filter')
             </div>
 
-            @auth
+            @can('create', \App\Models\Task::class)
                 <a href="{{ route('tasks.create') }}" class="app-button ml-auto shrink-0">
                     {{ __('strings.create task') }}
                 </a>
-            @endauth
+            @endcan
         </div>
 
         @include('Task._table', compact('tasks'))

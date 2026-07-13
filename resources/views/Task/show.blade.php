@@ -4,9 +4,9 @@
     <div class="grid col-span-full">
         <h1 class="mb-5 text-4xl md:text-4xl xl:text-5xl">
             {{ __('strings.view task') }}: {{ $task->name }}
-            @auth
-                <a href="{{ route('tasks.edit', $task) }}" class="text-2xl">⚙</a>
-            @endauth
+            @can('update', $task)
+                <a href="{{ route('tasks.edit', $task) }}" class="text-2xl" title="{{ __('strings.edit') }}">⚙</a>
+            @endcan
         </h1>
 
         <div class="space-y-2">

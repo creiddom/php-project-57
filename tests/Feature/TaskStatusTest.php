@@ -85,9 +85,7 @@ class TaskStatusTest extends TestCase
 
     public function testCreateNotAuth(): void
     {
-        $response = $this->get(route('task_statuses.create'));
-
-        $response->assertForbidden();
+        $this->assertGuestGetForbidden(route('task_statuses.create'));
     }
 
     public function testStore(): void
@@ -100,17 +98,14 @@ class TaskStatusTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('task_statuses', ['name' => $this->fakeNameForTaskStatus]);
-        $response->assertRedirect(route('task_statuses.index'));
+        $this->assertRedirectToRouteWithSuccess($response, 'task_statuses.index');
     }
 
     public function testStoreNotAuth(): void
     {
-        $response = $this
-            ->post(route('task_statuses.store'), [
-                'name' => 'newTestStatus',
-            ]);
-
-        $response->assertForbidden();
+        $this->assertGuestPostForbidden(route('task_statuses.store'), [
+            'name' => 'newTestStatus',
+        ]);
     }
 
     public function testStoreValidation(): void
@@ -123,7 +118,7 @@ class TaskStatusTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('name');
-        $response->assertRedirect(route('task_statuses.create'));
+        $response->assertRedirectToRoute('task_statuses.create');
     }
 
     public function testStoreDuplicateName(): void
@@ -136,7 +131,7 @@ class TaskStatusTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('name');
-        $response->assertRedirect(route('task_statuses.create'));
+        $response->assertRedirectToRoute('task_statuses.create');
     }
 
     public function testEdit(): void
@@ -151,9 +146,7 @@ class TaskStatusTest extends TestCase
 
     public function testEditNotAuth(): void
     {
-        $response = $this->get(route('task_statuses.edit', ['task_status' => $this->taskStatus]));
-
-        $response->assertForbidden();
+        $this->assertGuestGetForbidden(route('task_statuses.edit', ['task_status' => $this->taskStatus]));
     }
 
     public function testUpdate(): void
@@ -166,7 +159,7 @@ class TaskStatusTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseHas('task_statuses', ['name' => $this->fakeNameForTaskStatusUpdate]);
-        $response->assertRedirect(route('task_statuses.index'));
+        $this->assertRedirectToRouteWithSuccess($response, 'task_statuses.index');
     }
 
     public function testUpdateDuplicateName(): void
@@ -181,7 +174,7 @@ class TaskStatusTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('name');
-        $response->assertRedirect(route('task_statuses.edit', ['task_status' => $this->taskStatus]));
+        $response->assertRedirectToRoute('task_statuses.edit', ['task_status' => $this->taskStatus]);
     }
 
     public function testUpdateValidation(): void
@@ -194,25 +187,19 @@ class TaskStatusTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('name');
-        $response->assertRedirect(route('task_statuses.edit', ['task_status' => $this->taskStatus]));
+        $response->assertRedirectToRoute('task_statuses.edit', ['task_status' => $this->taskStatus]);
     }
 
     public function testUpdateNotAuth(): void
     {
-        $response = $this
-            ->patch(route('task_statuses.update', ['task_status' => $this->taskStatus]), [
-                'name' => 'test',
-            ]);
-
-        $response->assertForbidden();
+        $this->assertGuestPatchForbidden(route('task_statuses.update', ['task_status' => $this->taskStatus]), [
+            'name' => 'test',
+        ]);
     }
 
     public function testDestroyNotAuth(): void
     {
-        $response = $this
-            ->delete(route('task_statuses.destroy', ['task_status' => $this->taskStatus]));
-
-        $response->assertForbidden();
+        $this->assertGuestDeleteForbidden(route('task_statuses.destroy', ['task_status' => $this->taskStatus]));
     }
 
     public function testDestroy(): void
@@ -223,7 +210,7 @@ class TaskStatusTest extends TestCase
 
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseMissing('task_statuses', ['id' => $this->taskStatus->id]);
-        $response->assertRedirect(route('task_statuses.index'));
+        $this->assertRedirectToRouteWithSuccess($response, 'task_statuses.index');
     }
 
     public function testDestroyWhenStatusHasTasks(): void
@@ -237,8 +224,7 @@ class TaskStatusTest extends TestCase
             ->actingAs($this->user)
             ->delete(route('task_statuses.destroy', ['task_status' => $this->taskStatus]));
 
-        $response->assertRedirect(route('task_statuses.index'));
-        $response->assertSessionHas('flash_notification');
+        $this->assertRedirectToRouteWithError($response, 'task_statuses.index');
         $this->assertDatabaseHas('task_statuses', ['id' => $this->taskStatus->id]);
     }
 }

@@ -3,6 +3,7 @@
 @section('content')
     @include('shared.simple-resource-index', [
         'title' => __('strings.labels'),
+        'modelClass' => \App\Models\Label::class,
         'createRoute' => route('labels.create'),
         'createLabel' => __('strings.create label'),
         'items' => $labels,

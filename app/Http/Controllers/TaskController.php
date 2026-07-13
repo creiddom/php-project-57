@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTaskRequest;
 use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Task;
-use App\Services\TaskFormOptionsService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -13,9 +12,8 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class TaskController extends Controller
 {
-    public function __construct(
-        private readonly TaskFormOptionsService $taskFormOptions,
-    ) {
+    public function __construct()
+    {
         $this->authorizeResource(Task::class, 'task');
     }
 
@@ -33,17 +31,13 @@ class TaskController extends Controller
             ->paginate(15)
             ->appends(request()->query());
 
-        return view('Task.index', [
-            'tasks' => $tasks,
-            ...$this->taskFormOptions->get(),
-        ]);
+        return view('Task.index', compact('tasks'));
     }
 
     public function create(): View
     {
         return view('Task.create', [
             'task' => new Task(),
-            ...$this->taskFormOptions->get(),
         ]);
     }
 
@@ -70,10 +64,7 @@ class TaskController extends Controller
     {
         $task->load('labels');
 
-        return view('Task.edit', [
-            'task' => $task,
-            ...$this->taskFormOptions->get(),
-        ]);
+        return view('Task.edit', compact('task'));
     }
 
     public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
